@@ -679,18 +679,34 @@
   }
 
   function submitForm() {
-    const name = document.getElementById("f-name").value.trim();
-    const email = document.getElementById("f-email").value.trim();
-    const phone = document.getElementById("f-phone").value.trim();
-    const message = document.getElementById("f-message").value.trim();
-    const role = document.querySelector("input[name=role]:checked")?.value || "Не указано";
-    if (!name || !email || !phone) { alert("Заполните все обязательные поля."); return; }
-    const subject = encodeURIComponent("Новая заявка SAT Academy — " + name);
-    const body = encodeURIComponent("Новая заявка с сайта SAT Academy\n\nРоль: " + role + "\nИмя: " + name + "\nEmail: " + email + "\nТелефон: " + phone + "\nСообщение:\n" + (message || "—"));
-    document.getElementById("form-note").style.display = "block";
-    setTimeout(() => { window.location.href = "mailto:prepacademysat@gmail.com?subject=" + subject + "&body=" + body; }, 300);
-    setTimeout(() => { document.getElementById("form-body").style.display = "none"; document.getElementById("form-success").style.display = "block"; }, 1200);
+  const name = document.getElementById("f-name").value.trim();
+  const email = document.getElementById("f-email").value.trim();
+  const phone = document.getElementById("f-phone").value.trim();
+  const message = document.getElementById("f-message").value.trim();
+  const role = document.querySelector("input[name=role]:checked")?.value || "Не указано";
+
+  if (!name || !email || !phone) {
+    alert("Заполните все обязательные поля.");
+    return;
   }
+
+  fetch("https://formspree.io/f/meevppjz", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      name,
+      email,
+      phone,
+      role,
+      message
+    })
+  });
+
+  document.getElementById("form-body").style.display = "none";
+  document.getElementById("form-success").style.display = "block";
+}
 
   // Parallax on score screenshots
   document.addEventListener("mousemove", (e) => {
